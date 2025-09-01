@@ -112,38 +112,43 @@ export const makeCommunitiesSocket = (config: SocketConfig) => {
 	return {
 		...sock,
 		communityMetadata,
-		communityCreate: async (subject: string, body: string) => {
+		communityCreate: async (subject: string, body: string, createGeneralChat: boolean = true) => {
 			const descriptionId = generateMessageID().substring(0, 12)
+
+			const content: any[] = [
+				{
+					tag: 'description',
+					attrs: { id: descriptionId },
+					content: [
+						{
+							tag: 'body',
+							attrs: {},
+							content: Buffer.from(body || '', 'utf-8')
+						}
+					]
+				},
+				{
+					tag: 'parent',
+					attrs: { default_membership_approval_mode: 'request_required' }
+				},
+				{
+					tag: 'allow_non_admin_sub_group_creation',
+					attrs: {}
+				}
+			]
+
+			if (createGeneralChat) {
+				content.push({
+					tag: 'create_general_chat',
+					attrs: {}
+				})
+			}
 
 			const result = await communityQuery('@g.us', 'set', [
 				{
 					tag: 'create',
 					attrs: { subject },
-					content: [
-						{
-							tag: 'description',
-							attrs: { id: descriptionId },
-							content: [
-								{
-									tag: 'body',
-									attrs: {},
-									content: Buffer.from(body || '', 'utf-8')
-								}
-							]
-						},
-						{
-							tag: 'parent',
-							attrs: { default_membership_approval_mode: 'request_required' }
-						},
-						{
-							tag: 'allow_non_admin_sub_group_creation',
-							attrs: {}
-						},
-						{
-							tag: 'create_general_chat',
-							attrs: {}
-						}
-					]
+					content
 				}
 			])
 
