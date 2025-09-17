@@ -2861,7 +2861,7 @@ __metadata:
     jimp: "npm:^1.6.0"
     jiti: "npm:^2.4.2"
     json: "npm:^11.0.0"
-    libsignal: "git+https://github.com/whiskeysockets/libsignal-node"
+    libsignal: "git+https://github.com/whiskeysockets/libsignal-node#4d08331a833727c338c1a90041d17b870210dfae"
     link-preview-js: "npm:^3.0.0"
     music-metadata: "npm:^11.7.0"
     open: "npm:^8.4.2"
@@ -7127,7 +7127,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libsignal@git+https://github.com/whiskeysockets/libsignal-node":
+"libsignal@git+https://github.com/whiskeysockets/libsignal-node#4d08331a833727c338c1a90041d17b870210dfae":
   version: 2.0.1
   resolution: "libsignal@https://github.com/whiskeysockets/libsignal-node.git#commit=4d08331a833727c338c1a90041d17b870210dfae"
   dependencies:
