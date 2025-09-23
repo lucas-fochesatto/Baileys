@@ -1,4 +1,5 @@
 import { proto } from '../../WAProto/index.js'
+import axios from 'axios'
 import type { GroupMetadata, GroupParticipant, ParticipantAction, SocketConfig, WAMessageKey } from '../Types'
 import { WAMessageStubType } from '../Types'
 import { generateMessageIDV2, unixTimestampSeconds } from '../Utils'
@@ -85,6 +86,36 @@ export const makeGroupsSocket = (config: SocketConfig) => {
 	return {
 		...sock,
 		groupMetadata,
+		getGroupPictureByInviteCode: async (inviteCode: string): Promise<string | undefined> => {
+			if (!inviteCode || /[^A-Za-z0-9]/.test(inviteCode)) {
+				return undefined
+			}
+			const url = `https://chat.whatsapp.com/${inviteCode}`
+			try {
+				const { data: html } = await axios.get<string>(url, {
+					headers: {
+						// Pretend to be a normal browser; WhatsApp may serve different content otherwise
+						'User-Agent': 'Mozilla/5.0 (Linux; BaileysBot) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+						Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+					}
+				})
+				// 1. Try og:image meta tag
+				let match = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+				let imageUrl = match?.[1]
+				// 2. Fallback: <img class="_9vx6" src="...">
+				if (!imageUrl) {
+					match = html.match(/<img[^>]+class=["'][^"']*_9vx6[^"']*["'][^>]+src=["']([^"']+)["']/i)
+					imageUrl = match?.[1]
+				}
+				if (imageUrl) {
+					// Decode basic HTML entities that matter here (&amp;)
+					imageUrl = imageUrl.replace(/&amp;/g, '&')
+				}
+				return imageUrl
+			} catch (err) {
+				return undefined
+			}
+		},
 		groupCreate: async (subject: string, participants: string[]) => {
 			const key = generateMessageIDV2()
 			const result = await groupQuery('@g.us', 'set', [
