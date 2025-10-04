@@ -28,6 +28,7 @@
     "changelog:preview": "conventional-changelog -p angular -u",
     "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "example": "tsx ./Example/example.ts",
+    "server": "tsx ./Example/server.ts",
     "gen:protobuf": "sh WAProto/GenerateStatics.sh",
     "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
     "lint": "tsc && eslint src --ext .js,.ts",
@@ -47,6 +48,7 @@
     "music-metadata": "^11.7.0",
     "pino": "^9.6",
     "protobufjs": "^7.2.4",
+    "qrcode-terminal": "^0.12.0",
     "ws": "^8.13.0"
   },
   "devDependencies": {
@@ -54,6 +56,7 @@
     "@eslint/js": "^9.31.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^16.0.0",
+    "@types/qrcode-terminal": "^0",
     "@types/ws": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "@typescript-eslint/parser": "^8.32.0",
